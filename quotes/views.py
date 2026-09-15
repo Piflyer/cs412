@@ -28,13 +28,14 @@ def quote(request):
 
 def show_all(request):
     '''shows all the quotes'''
+
+    zipped_dict = dict(zip(Quotes, Images))
+
+    context = {
+        'zipped_dict': zipped_dict,
+    }
     
-    response_text = '''
-    <html>
-    <h1>All Quotes</h1>
-    </html>
-    '''
-    return HttpResponse(response_text)
+    return render(request, 'quotes/view_all.html', context)
 
 def about(request):
     '''about page'''
