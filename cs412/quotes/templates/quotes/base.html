@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Tim's Quote Generator</title>
+    </head>
+    <body>
+        <header>
+            <h1> Quote of the Day </h1>
+            <a href="{% url 'quote' %}">Random Quote</a> |
+            <a href="{% url 'show_all' %}">Show All</a> |
+            <a href="{% url 'about' %}">About</a>
+        </header>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

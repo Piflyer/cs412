@@ -1,0 +1,7 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+    <h2>Today's Quote</h2>
+    <blockquote>"{{ quote }}"</blockquote>
+    <img src="{{ image }}" alt="Photo" style="max-width: 400px; height: auto;">
+{% endblock %}
