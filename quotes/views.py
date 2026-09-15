@@ -5,15 +5,15 @@ import random
 # Create your views here.
 
 Quotes = [
-    "I got something I want to talk about - Madonna",
+    "Moving first is a tactic, not a goal - Peter Thiel",
     "Competition is for losers - Peter Thiel",
-    "My goal is YC - Every larper out there"
+    "There's absolutely no bubble in technology - Peter Thiel"
 ]
 
 Images = [
-    "https://pics.freeartbackgrounds.com/midle/Nature_Landscape_Background-223.jpg",
-    "https://pics.freeartbackgrounds.com/midle/Azure_Blue_Sea_Background-775.jpg",
-    "https://pics.freeartbackgrounds.com/midle/Eiffel_Tower_at_Night_Paris_Background-1289.jpg",
+    "https://www.thenation.com/wp-content/uploads/2026/06/AP26064375929256.jpg",
+    "https://fortune.com/img-assets/wp-content/uploads/2024/12/GettyImages-2152107576-e1733614218964.jpg",
+    "https://img-cdn.inc.com/image/upload/f_webp,q_auto,c_fit/vip/2024/12/peter-thiel-inc.jpg",
 ]
 
 def quote(request):
@@ -27,7 +27,7 @@ def quote(request):
     return render(request, 'quotes/quote.html', context)
 
 def show_all(request):
-    '''shows all the quotes'''
+    '''shows all the quotes, makes it a zipped dictionary where we split by key/item'''
 
     zipped_dict = dict(zip(Quotes, Images))
 
@@ -38,11 +38,7 @@ def show_all(request):
     return render(request, 'quotes/view_all.html', context)
 
 def about(request):
-    '''about page'''
+    '''about page on peter thiel'''
     
-    response_text = '''
-    <html>
-    <h1>About</h1>
-    </html>
-    '''
-    return HttpResponse(response_text)
+
+    return render(request, 'quotes/about.html')
