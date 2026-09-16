@@ -1,0 +1,15 @@
+{% extends 'quotes/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/16/2026
+Description: Shows all images and quotes from Peter Thiel
+{% endcomment %}
+{% block content %}
+    <h2> Quotes </h2>
+        {% for quote in quotes%}
+            <blockquote>"{{ quote }}"</blockquote>
+        {% endfor %}
+        <h2> Photos </h2>
+        {% for image in images%}
+            <img src="{{ image }}" alt="Photo" style="max-width: 1000px;  width: 100vw; height: auto;">
+        {% endfor %}
+{% endblock %}

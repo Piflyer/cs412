@@ -1,8 +1,10 @@
+# Author: Tim Nguyen (tim7@bu.edu), 9/16/2026
+# Description: view functions for the quotes app, which displays quotes and images of Peter Thiel.
+
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 import random
 
-# Create your views here.
 
 Quotes = [
     "Moving first is a tactic, not a goal - Peter Thiel",
@@ -27,18 +29,17 @@ def quote(request):
     return render(request, 'quotes/quote.html', context)
 
 def show_all(request):
-    '''shows all the quotes, makes it a zipped dictionary where we split by key/item'''
-
-    zipped_dict = dict(zip(Quotes, Images))
+    '''shows all the quotes, makes it return two lists and then pulled for the HTML page render'''
 
     context = {
-        'zipped_dict': zipped_dict,
+        'images': Images,
+        'quotes': Quotes,
     }
     
-    return render(request, 'quotes/view_all.html', context)
+    return render(request, 'quotes/show_all.html', context)
 
 def about(request):
-    '''about page on peter thiel'''
+    '''about page on peter thiel and tim'''
     
 
     return render(request, 'quotes/about.html')

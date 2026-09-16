@@ -1,8 +1,0 @@
-{% extends 'quotes/base.html' %}
-
-{% block content %}
-        {% for key, values in zipped_dict.items%}
-            <blockquote>"{{ key }}"</blockquote>
-            <img src="{{ values }}" alt="Photo" style="max-width: 1000px;  width: 100vw; height: auto;">
-        {% endfor %}
-{% endblock %}
