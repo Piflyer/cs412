@@ -1,0 +1,24 @@
+{% load static %}
+
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
+Description: Base HTML file for navigation for restaurants
+{% endcomment %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>MegaBites</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}"> 
+    </head>
+    <body style="background-color: black; color: green">
+        <header style="padding-top: 40px">
+            <h1> MegaBites</h1>
+            <p>Serving delectable bites since 1970!</p>
+            <a href="{% url 'main' %}">Home</a> |
+            <a href="{% url 'main' %}">Order Now</a>
+        </header>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
