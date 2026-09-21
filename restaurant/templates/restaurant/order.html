@@ -1,0 +1,20 @@
+{% extends 'restaurant/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
+Description: Order Page for MegaBites, a restraunt
+{% endcomment %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <h2> Today's Special </h2>
+    
+    <h3>
+        <input type="checkbox" name="special" value={{special.price}} style="display:inline"> 
+        {{ special.name}} - ${{ special.price}}
+    </h3>
+    <p>{{ special.desc}}<p>
+
+    <h2>Core Bites</h2>
+    
+</form>
+{% endblock %}

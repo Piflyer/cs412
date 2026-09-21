@@ -9,19 +9,69 @@ def order(request):
     
     
     daily_specials= [
-        ["Chip Shortage", 4.99, "Extra yummy chips that will definitely leave you with shortage when paired with our not-quite-queso-queso dip.", []],
-        ["Stackoverflow Nachos", 14.99, "Our take on a nacho tower, paired with our house-made chips and organic ground beef. You'll clear the stack, guaranteed.", []],
-        ["Hash-table Browns", 3.99, "Our take on a hash brown, except faster and better.", []]
+        {
+            'name': "Chip Shortage",
+            'price': 4.99,
+            'desc': "Extra yummy chips that will definitely leave you with shortage when paired with our not-quite-queso-queso dip.",
+            'option': [],
+        },
+        {
+            'name': "Stackoverflow Nachos",
+            'price': 14.99,
+            'desc': "Our take on a nacho tower, paired with our house-made chips and organic ground beef. You'll clear the stack, guaranteed.",
+            'option': [],
+        },
+        {
+            'name': "Hash-table Browns",
+            'price': 3.99,
+            'desc': "Our take on a hash brown, except faster and better",
+            'option': [],
+        },
     ]
-    
-    core_menu= [
-        ["Spam & Eggs", 12.99, "The breakfast you never asked for, yet you see it everywhere", []],
-        ["Not-a-Bubble Bubble Milkshake", 7.99, "We are not in a bubble, but we still made a bubble milkshake", []],
-        ["Bacon-developer", 14.99, "We used some very delicate logic to sizzle and serve this to perfection.", []],
-        ["Localhost Fries", 5.99, "No place like 127.0.0.1. And some fries to go with it.", [["MegaBite", 0], ["GigaBite", 1], ["TerraBite", 2]]],
-        ["Bacon-developer", 14.99, "We used some very delicate logic to sizzle and serve this to perfection.", []],
-        ["Phish Tacos", 12.99, "Looks suspiciously authentic and good, you will get hooked.", []],
-        ["Raspberry Pi", 8.99, "Nothing completes a meal like a low cost, bite-sized desert.", []]
+
+    core_menu = [
+        {
+            'name': "Spam & Eggs",
+            'price': 12.99,
+            'desc': "The breakfast you never asked for, yet you see it everywhere.",
+            'option': [],
+        },
+        {
+            'name': "Not-a-Bubble Bubble Milkshake",
+            'price': 7.99,
+            'desc': "We are not in a bubble, but we still made a bubble milkshake.",
+            'option': [],
+        },
+        {
+            'name': "Bacon-developer",
+            'price': 14.99,
+            'desc': "We used some very delicate logic to sizzle and serve this to perfection.",
+            'option': [],
+        },
+        {
+            'name': "Localhost Fries",
+            'price': 5.99,
+            'desc': "No place like 127.0.0.1. And some fries to go with it.",
+            'option': [["MegaBite", 0], ["GigaBite", 1], ["TerraBite", 2]],
+        },
+        {
+            'name': "Bacon-developer",
+            'price': 14.99,
+            'desc': "We used some very delicate logic to sizzle and serve this to perfection.",
+            'option': [],
+        },
+        {
+            'name': "Phish Tacos",
+            'price': 12.99,
+            'desc': "Looks suspiciously authentic and good, you will get hooked.",
+            'option': [],
+        },
+        {
+            'name': "Raspberry Pi",
+            'price': 8.99,
+            'desc': "Nothing completes a meal like a low cost, bite-sized desert.",
+            'option': [],
+        },
     ]
     
     context = {
