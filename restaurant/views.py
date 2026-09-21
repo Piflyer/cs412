@@ -52,7 +52,20 @@ def order(request):
             'name': "Localhost Fries",
             'price': 5.99,
             'desc': "No place like 127.0.0.1. And some fries to go with it.",
-            'option': [["MegaBite", 0], ["GigaBite", 1], ["TerraBite", 2]],
+            'option': [
+                {
+                    'name': "MegaBite",
+                    'price': 0,
+                },
+                {
+                    'name': "GigaBite",
+                    'price': 1,
+                },
+                {
+                    'name': "TerraBite",
+                    'price': 2,
+                },
+            ]
         },
         {
             'name': "Bacon-developer",

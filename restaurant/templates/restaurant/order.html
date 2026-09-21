@@ -15,6 +15,21 @@ Description: Order Page for MegaBites, a restraunt
     <p>{{ special.desc}}<p>
 
     <h2>Core Bites</h2>
-    
+    {%for item in core_menu%}
+        <h3>
+        <input type="checkbox" name="core" value={{item.price}} style="display:inline"> 
+        {{ item.name}} - ${{ item.price}}
+    </h3>
+    <p>{{ item.desc}}<p>
+        {%if item.option %}
+        <h4> Options: <h4>
+        <p>
+            {%for opt in item.option%}
+                    <input type="checkbox" name="option" value={{opt.price}} style="display:inline"> 
+                    {{opt.name}} - Add ${{opt.price}}
+            {%endfor%}
+        <p>
+        {%endif%}
+    {%endfor%}
 </form>
 {% endblock %}
