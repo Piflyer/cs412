@@ -78,9 +78,11 @@ CORE_MENU = [
 
 
 def main(request):
+    '''Renders the homepage'''
     return render(request, 'restaurant/main.html')
 
 def order(request):
+    '''Handles the order page by randomly choosing a daily special and showing the all the core menu items'''
     context = {
         'special' : random.choice(DAILY_SPECIALS),
         'core_menu' : CORE_MENU
@@ -89,6 +91,7 @@ def order(request):
     return render(request, 'restaurant/order.html', context=context)
 
 def confirmation(request):
+    '''Handles confirmation logic by first coming up with an estimated order time and than handling the requests'''
     total_cost = 0
     context = {}
     items_ordered = []
@@ -100,17 +103,20 @@ def confirmation(request):
         minute -= 60
         hour = hour % 12
     readyTime = f'{hour}:{minute}'
+    # checks if POSt request is made and starts filtering it down
     if request.POST:
         name = request.POST['name']
         phone = request.POST['phone']
         email = request.POST['email']
         card = request.POST['card']
         special_instructions = request.POST['instructions']
+        # goes through each of the core menu items request
         for items in request.POST.getlist('core'):
             item = CORE_MENU[int(items)]
             items_ordered.append(item)
             total_cost += item['price']
             option = request.POST.get(f'option_{int(items)}')
+            #checks if any options was selected
             if option:
                 opt = item['option'][int(option)]
                 items_ordered.append({
@@ -118,12 +124,13 @@ def confirmation(request):
                     'price': item['option'][int(option)]['price'],
                 })
                 total_cost += item['option'][int(option)]['price']
-
+        #checks for daily specials
         if request.POST['special']:
             for order in DAILY_SPECIALS:
                 if request.POST['special'] == order['price']:
                     items_ordered += order
                     total_cost += order['price']
+        #wraps up as a context to be sent to the confirmation page
         context = {
             'name': name,
             'phone': phone,

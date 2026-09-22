@@ -1,5 +1,5 @@
 # Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
-# Description: set redirect paths to render proper pages for restraunts
+# Description: set redirect paths to render proper pages for restaurants, the paths include main (home page), order (order page), and confirmation (submission action that leads to confirmation page)
 
 from django.urls import path
 from django.conf.urls.static import static
