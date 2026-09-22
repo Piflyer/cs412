@@ -42,11 +42,13 @@ Description: Order Page for MegaBites, a restraunt
     Name: <input type="text" name="name" style="width: 50%;" >
     
     <div style="margin-top: 20px"> </div>
-    Phone: <input type="text" name="phone" style="width: 50%;">
+    Phone: <input type="tel" name="phone" style="width: 50%;">
     <div style="margin-top: 20px"> </div>
 
     Email: <input type="text" name="email"style="width: 50%;">
 <div style="margin-top: 20px"> </div>
-    <input type="submit" id="submitButt">
+Card Number: <input type="number" name="card"style="width: 50%;"> CVV <input type="number" name="CVV"style="width: 50px;">
+<div style="margin-top: 20px"> </div>
+    <input type="submit" id="submitButt" value="Order Now">
 </form>
 {% endblock %}

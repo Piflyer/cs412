@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import random
+from datetime import datetime
 # Create your views here.
 
 DAILY_SPECIALS= [
@@ -97,10 +98,13 @@ def submit(request):
     total_cost = 0
     context = {}
     items_ordered = []
+    ordertime = random.randint(30, 60)
+    readyTime = f'{datetime.now().hour}:{datetime.now().minute + ordertime}'
     if request.POST:
         name = request.POST['name']
         phone = request.POST['phone']
         email = request.POST['email']
+        card = request.POST['card']
         special_instructions = request.POST['instructions']
         for items in request.POST.getlist('core'):
             item = CORE_MENU[int(items)]
@@ -118,6 +122,8 @@ def submit(request):
             'special_instructions': special_instructions,
             'total_cost': total_cost,
             'items_ordered': items_ordered,
+            'readytime': readyTime,
+            'card': card[-4:],
         }
     return render(request, 'restaurant/confirmation.html', context=context)
 

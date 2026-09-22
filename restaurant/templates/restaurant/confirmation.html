@@ -1,0 +1,20 @@
+{% extends 'restaurant/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
+Description: Confirmation Page for MegaBites, a restraunt
+{% endcomment %}
+{% block content %}
+<h2> Your Order should be ready by {{readytime}}</h2>
+<p>Thank you, {{name}}. We have successfully charged ${{total_cost}} to the account ending with {{card}}. We will text you at {{phone}} or reach out to you at {{email}} when your order is ready.</p>
+<h3>Items:</h3>
+<ul>
+{%for item in items_ordered%}
+    <li>${{item.price}} - {{item.name}}
+{%endfor%}
+    <div id="bar"> </div>
+    <li>${{total_cost}} - Total Cost
+</ul>
+
+<h3>Special Instructions:</h3>
+<p>{{special_instructions}}</p>
+{% endblock %}
