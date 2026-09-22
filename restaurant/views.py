@@ -94,6 +94,7 @@ def confirmation(request):
     '''Handles confirmation logic by first coming up with an estimated order time and than handling the requests'''
     total_cost = 0
     context = {}
+    readyTime = None
     items_ordered = []
     ordertime = random.randint(30, 60)
     hour = datetime.now().hour + 1
@@ -102,7 +103,10 @@ def confirmation(request):
         hour += 1
         minute -= 60
         hour = hour % 12
-    readyTime = f'{hour}:{minute}'
+        if minute < 10:
+            readyTime = f'{hour}:0{minute}'
+        else:
+            readyTime = f'{hour}:{minute}'
     # checks if POSt request is made and starts filtering it down
     if request.POST:
         name = request.POST['name']
@@ -125,7 +129,7 @@ def confirmation(request):
                 })
                 total_cost += item['option'][int(option)]['price']
         #checks for daily specials
-        if request.POST['special']:
+        if 'special' in request.POST:
             for order in DAILY_SPECIALS:
                 if request.POST['special'] == order['price']:
                     items_ordered += order
