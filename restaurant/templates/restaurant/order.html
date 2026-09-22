@@ -18,7 +18,7 @@ Description: Order Page for MegaBites, a restraunt
     {%for item in core_menu%}
     <div id="food-item">
         <h3>
-        <input type="checkbox" name="core" value={{item.price}} style="display:inline"> 
+        <input type="checkbox" name="core" value={{forloop.counter0}} style="display:inline"> 
         {{ item.name}} - ${{ item.price}}
     </h3>
     <p>{{ item.desc}}<p>
@@ -26,7 +26,7 @@ Description: Order Page for MegaBites, a restraunt
         <h4> Options: <h4>
         <p>
             {%for opt in item.option%}
-                    <input type="checkbox" name="option" value={{opt.price}} style="display:inline"> 
+                    <input type="radio" name="option" value={{forloop.parentloop.counter0}} style="display:inline"> 
                     {{opt.name}} - Add ${{opt.price}}
             {%endfor%}
         <p>
@@ -35,7 +35,7 @@ Description: Order Page for MegaBites, a restraunt
     {%endfor%}
 
     <h3> Special Instructions </h3>
-    <textarea id="message" name="message" rows="6" cols="50" placeholder="Extra Utensils, Food Intolerance, etc..."></textarea>
+    <textarea id="message" name="instructions" rows="6" cols="50" placeholder="Extra Utensils, Food Intolerance, etc..."></textarea>
 
     <div id="bar"> </div>
     <h2>This Order is For:</h2>

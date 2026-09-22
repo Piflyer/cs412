@@ -11,5 +11,6 @@ urlpatterns = [
     path('main', views.main, name="main"),
     path('order', views.order, name="orders"),
     path('confirmation', views.confirmation, name="confirmation"),
+    path('submit', views.submit, name="submit")
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
