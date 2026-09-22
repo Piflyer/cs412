@@ -19,3 +19,29 @@ a, a:visited {
     color: blue;
     text-decoration: none;
 }
+#food-item  {
+    border-radius: 20px;
+    border: 2px solid green;
+    padding: 15px;
+    padding-left: 25px;
+    margin-top: 15px;
+}
+
+#bar {
+    border: 2px solid green;
+    width: 100%;
+    border-radius: 20px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#submitButt {
+    height: 50px;
+    width: 250px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    border-radius: 20px;
+    font-size: 20px;
+    background: green;
+    border: none;
+}
