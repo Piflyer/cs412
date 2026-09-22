@@ -4,7 +4,7 @@ Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
 Description: Order Page for MegaBites, a restraunt
 {% endcomment %}
 {% block content %}
-<form action="{% url 'submit' %}" method="POST">
+<form action="{% url 'confirmation' %}" method="POST">
     {% csrf_token %}
     <h2> Today's Special </h2>
     <div id="food-item">

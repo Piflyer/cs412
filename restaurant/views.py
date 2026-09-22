@@ -88,7 +88,7 @@ def order(request):
 
     return render(request, 'restaurant/order.html', context=context)
 
-def submit(request):
+def confirmation(request):
     total_cost = 0
     context = {}
     items_ordered = []
@@ -135,6 +135,3 @@ def submit(request):
             'card': card[-4:],
         }
     return render(request, 'restaurant/confirmation.html', context=context)
-
-def confirmation(request):
-    return render(request, 'restaurant/main.html')
