@@ -26,7 +26,7 @@ Description: Order Page for MegaBites, a restraunt
         <h4> Options: <h4>
         <p>
             {%for opt in item.option%}
-                    <input type="radio" name="option" value={{forloop.parentloop.counter0}} style="display:inline"> 
+                    <input type="radio" name="option_{{forloop.parentloop.counter0}}" value={{forloop.counter0}} style="display:inline"> 
                     {{opt.name}} - Add ${{opt.price}}
             {%endfor%}
         <p>

@@ -63,12 +63,6 @@ CORE_MENU = [
         ]
     },
     {
-        'name': "Bacon-developer",
-        'price': 14.99,
-        'desc': "We used some very delicate logic to sizzle and serve this to perfection.",
-        'option': [],
-    },
-    {
         'name': "Phish Tacos",
         'price': 12.99,
         'desc': "Looks suspiciously authentic and good, you will get hooked.",
@@ -99,7 +93,13 @@ def submit(request):
     context = {}
     items_ordered = []
     ordertime = random.randint(30, 60)
-    readyTime = f'{datetime.now().hour}:{datetime.now().minute + ordertime}'
+    hour = datetime.now().hour + 1
+    minute = datetime.now().minute + ordertime
+    if minute > 59:
+        hour += 1
+        minute -= 60
+        hour = hour % 12
+    readyTime = f'{hour}:{minute}'
     if request.POST:
         name = request.POST['name']
         phone = request.POST['phone']
@@ -110,6 +110,15 @@ def submit(request):
             item = CORE_MENU[int(items)]
             items_ordered.append(item)
             total_cost += item['price']
+            option = request.POST.get(f'option_{int(items)}')
+            if option:
+                opt = item['option'][int(option)]
+                items_ordered.append({
+                    'name': item['option'][int(option)]['name'],
+                    'price': item['option'][int(option)]['price'],
+                })
+                total_cost += item['option'][int(option)]['price']
+
         if request.POST['special']:
             for order in DAILY_SPECIALS:
                 if request.POST['special'] == order['price']:
