@@ -91,9 +91,13 @@ def order(request):
         'special' : random.choice(daily_specials),
         'core_menu' : core_menu
     }
-    
-    
+
     return render(request, 'restaurant/order.html', context=context)
+
+def submit(request):
+    if request.POST:
+        name = request.POST['name']
+        phone = request.POST
 
 def confirmation(request):
     return render(request, 'restaurant/main.html')

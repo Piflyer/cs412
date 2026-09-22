@@ -4,18 +4,19 @@ Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
 Description: Order Page for MegaBites, a restraunt
 {% endcomment %}
 {% block content %}
-<form action="" method="POST">
+<form action="{% url 'submit' %}" method="POST">
     {% csrf_token %}
     <h2> Today's Special </h2>
-    
+    <div id="food-item">
     <h3>
         <input type="checkbox" name="special" value={{special.price}} style="display:inline"> 
         {{ special.name}} - ${{ special.price}}
     </h3>
     <p>{{ special.desc}}<p>
-
+    </div>
     <h2>Core Bites</h2>
     {%for item in core_menu%}
+    <div id="food-item">
         <h3>
         <input type="checkbox" name="core" value={{item.price}} style="display:inline"> 
         {{ item.name}} - ${{ item.price}}
@@ -30,6 +31,22 @@ Description: Order Page for MegaBites, a restraunt
             {%endfor%}
         <p>
         {%endif%}
+    </div>
     {%endfor%}
+
+    <h3> Special Instructions </h3>
+    <textarea id="message" name="message" rows="6" cols="50" placeholder="Extra Utensils, Food Intolerance, etc..."></textarea>
+
+    <div id="bar"> </div>
+    <h2>This Order is For:</h2>
+    Name: <input type="text" name="name" style="width: 50%;" >
+    
+    <div style="margin-top: 20px"> </div>
+    Phone: <input type="text" name="phone" style="width: 50%;">
+    <div style="margin-top: 20px"> </div>
+
+    Email: <input type="text" name="email"style="width: 50%;">
+<div style="margin-top: 20px"> </div>
+    <input type="submit" id="submitButt">
 </form>
 {% endblock %}
