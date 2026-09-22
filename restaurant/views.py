@@ -49,16 +49,16 @@ CORE_MENU = [
         'desc': "No place like 127.0.0.1. And some fries to go with it.",
         'option': [
             {
-                'name': "MegaBite",
-                'price': 0,
+                'name': "MegaBite (2x)",
+                'price': 0.99,
             },
             {
-                'name': "GigaBite",
-                'price': 1,
+                'name': "GigaBite (4x)",
+                'price': 1.99,
             },
             {
-                'name': "TerraBite",
-                'price': 2,
+                'name': "TerraBite (5x)",
+                'price': 2.99,
             },
         ]
     },
