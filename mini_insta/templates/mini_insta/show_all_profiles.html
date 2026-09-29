@@ -1,0 +1,13 @@
+<h1>Showing all Profiles</h1>
+<!-- scriptlet code to display the value of the variable `Articles`  -->
+{% for prof in profile %}
+<div>
+    <h1>{{prof.username}}</h1>
+    <h2>{{prof.display_name}}</h2>
+    <img src="{{prof.profile_image_url}}" style="width: 200px; height: 200px; object-fit: cover; object-position: center;">
+    <p>{{prof.bio_text}}</p>
+    <p>{{prof.join_date}}</p>
+
+</div>
+
+{% endfor %}
