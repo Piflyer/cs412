@@ -16,7 +16,14 @@ Description: Base HTML file for mini_insta assignment
             <h1> Book Face</h1>
             <a href="{% url 'show_all_profiles' %}">Main Directory</a>
         </header>
+        <main>
         {% block content %}
         {% endblock %}
+        </main>
+        <footer style="margin-top: auto; padding: 20px">
+            <a href="{% url 'show_all_profiles' %}">
+            Go Back
+            </a>
+        </footer>
     </body>
 </html>

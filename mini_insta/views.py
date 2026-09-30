@@ -1,3 +1,9 @@
+'''
+Author : Tim Nguyen
+Email : tim7@bu.edu
+Desc : Manager for showing all profiles and individual profiles
+'''
+
 from django.shortcuts import render
 from .models import Profile
 from django.views.generic import ListView, DetailView

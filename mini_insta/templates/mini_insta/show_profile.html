@@ -6,20 +6,14 @@ Description: Indivual Profiles for book face
 
 {% block content%}
 
-<main>
 <div id="profileSq">
         <img src="{{profile.profile_image_url}}" style="margin-top: -15px; width: 150px; height: 150px; object-fit: cover; object-position: center;">
     <div>
         <h1 style="margin: 0;">{{profile.display_name}}</h1>
         <h2 style="margin: 0;">@{{profile.username}}</h2>
         <p >{{profile.bio_text}}</p>
-        <p>Joined: {{profile.join_date}}</p>
+        <p style="margin-top: -10px">Joined: {{profile.join_date}}</p>
+        <p style="margin-top: -10px"> 300 Followers | 200 Following | 3 Posts</p>
     </div>
 </div>
-</main>
-<footer style="margin-top: auto; padding: 20px">
-    <a href="{% url 'show_all_profiles' %}">
-    Go Back
-    </a>
-</footer>
 {%endblock%}
