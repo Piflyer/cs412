@@ -1,0 +1,22 @@
+{% load static %}
+
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/29/2026
+Description: Base HTML file for mini_insta assignment
+{% endcomment %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>BookFace</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}"> 
+    </head>
+    <body>
+        <header style="padding-top: 10px">
+            <h1> Book Face</h1>
+            <a href="{% url 'show_all_profiles' %}">Main Directory</a>
+        </header>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

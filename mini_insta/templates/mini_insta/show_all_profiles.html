@@ -1,13 +1,22 @@
-<h1>Showing all Profiles</h1>
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
+Description: Show all profiles page for book face
+{% endcomment %}
+
+{% block content%}
+
+<h1>All Profiles</h1>
+<div class=grid>
 <!-- scriptlet code to display the value of the variable `Articles`  -->
 {% for prof in profile %}
-<div>
-    <h1>{{prof.username}}</h1>
-    <h2>{{prof.display_name}}</h2>
-    <img src="{{prof.profile_image_url}}" style="width: 200px; height: 200px; object-fit: cover; object-position: center;">
-    <p>{{prof.bio_text}}</p>
-    <p>{{prof.join_date}}</p>
-
-</div>
-
+    <div id=instadiv>
+        <h2>{{prof.display_name}}</h2>
+        <h3 style="margin-top: -15px">@{{prof.username}}</h3>
+        <img src="{{prof.profile_image_url}}" style="margin-top: -15px; width: 100px; height: 100px; object-fit: cover; object-position: center;">
+        <p>{{prof.bio_text}}</p>
+        <p>Joined: {{prof.join_date}}</p>
+    </div>
 {% endfor %}
+</div>
+{%endblock%}
