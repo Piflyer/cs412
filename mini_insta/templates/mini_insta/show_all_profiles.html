@@ -1,15 +1,15 @@
 {% extends 'mini_insta/base.html' %}
 {% comment %}
-Author: Tim Nguyen (tim7@bu.edu), 9/17/2026
+Author: Tim Nguyen (tim7@bu.edu), 9/29/2026
 Description: Show all profiles page for book face
 {% endcomment %}
 
 {% block content%}
 
 <h1>All Profiles</h1>
-<div class=grid>
-<!-- scriptlet code to display the value of the variable `Articles`  -->
+<div class=grid style="padding-bottom: 40px">
 {% for prof in profile %}
+<a href="{% url 'profile' prof.pk %}" style="text-decoration: none; color: black">
     <div id=instadiv>
         <h2>{{prof.display_name}}</h2>
         <h3 style="margin-top: -15px">@{{prof.username}}</h3>
@@ -17,6 +17,7 @@ Description: Show all profiles page for book face
         <p>{{prof.bio_text}}</p>
         <p>Joined: {{prof.join_date}}</p>
     </div>
+</a>
 {% endfor %}
 </div>
 {%endblock%}
