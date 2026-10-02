@@ -1,0 +1,21 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/29/2026
+Description: Indivual Profiles for book face
+{% endcomment %}
+
+{% block content%}
+<div>
+<div style="margin-bottom: 25px">
+<a href="{% url 'show_profile' post.profile.pk %}" style="display: inline-flex; align-items: center; text-decoration: none;">
+    <img src="{{post.profile.profile_image_url}}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+    <h2 style="margin: 0 0 0 12px;">@{{post.profile.username}}</h2>
+</a>
+</div>
+{% for image in post.get_Photos %}
+<img src="{{image.image_url}}" style="width: 500px; height: 500px; object-fit: cover; object-position: center;">
+{% endfor %}
+<h3> {{post.caption}}</h3>
+<p>Posted on: {{post.timestamp}}</p>
+</div>
+{%endblock%}

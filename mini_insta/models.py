@@ -13,5 +13,29 @@ class Profile(models.Model):
     bio_text = models.TextField(blank=False)
     join_date = models.DateTimeField(auto_now=True)
     
+    def get_Posts(self):
+        posts = Posts.objects.filter(profile=self)
+        return posts
+    
     def __str__(self):
         return f"{self.username}, created on {self.join_date}."
+
+class Posts(models.Model):
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    caption = models.TextField(blank=False)
+    timestamp = models.DateTimeField(auto_now=True)
+    
+    def get_Photos(self):
+        photos = Photo.objects.filter(posts=self)
+        return photos
+    
+    def __str__(self):
+        return f"{self.caption}, created on {self.timestamp}."
+
+class Photo(models.Model):
+    posts = models.ForeignKey("Posts", on_delete=models.CASCADE)
+    image_url = models.URLField(blank=False)
+    timestamp = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+            return f"{self.posts}, created on {self.timestamp}."

@@ -5,7 +5,7 @@ Desc : Manager for showing all profiles and individual profiles
 '''
 
 from django.shortcuts import render
-from .models import Profile
+from .models import Profile, Posts
 from django.views.generic import ListView, DetailView
 
 
@@ -22,3 +22,9 @@ class ProfileDetailView(DetailView):
     model = Profile
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile"
+
+class PostDetailView(DetailView):
+    '''show each indivual post seperately'''
+    model = Posts
+    template_name = "mini_insta/show_post.html"
+    context_object_name = "post"

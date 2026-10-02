@@ -6,7 +6,7 @@ Description: Indivual Profiles for book face
 
 {% block content%}
 
-<div id="profileSq">
+<div id="profileSq" style="padding-bottom: 30px">
         <img src="{{profile.profile_image_url}}" style="margin-top: -15px; width: 150px; height: 150px; object-fit: cover; object-position: center;">
     <div>
         <h1 style="margin: 0;">{{profile.display_name}}</h1>
@@ -15,5 +15,16 @@ Description: Indivual Profiles for book face
         <p style="margin-top: -10px">Joined: {{profile.join_date}}</p>
         <p style="margin-top: -10px"> 300 Followers | 200 Following | 3 Posts</p>
     </div>
+</div>
+
+
+<div class=grid style="padding-bottom: 40px, padding-top: 30px">
+{% for post in profile.get_Posts %}
+<a href="{% url 'post' post.pk %}" style="text-decoration: none; color: black">
+    <div id=instadiv style="padding: 0;">
+        <img src="{{post.get_Photos.first.image_url}}" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+    </div>
+</a>
+{% endfor %}
 </div>
 {%endblock%}
