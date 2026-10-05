@@ -20,6 +20,7 @@ Description: Create Post form
         <td></td>
         <td>
             <input type='submit' name = 'Post' value= 'Post'>
+                   <button type="button" onclick="location.href='{% url 'show_profile' view.kwargs.pk %}'">Cancel</button>
         </td>
     </tr>
     </table>

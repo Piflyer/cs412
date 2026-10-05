@@ -45,13 +45,8 @@ class CreatePostView(CreateView):
         form.instance.profile = profile
         response = super().form_valid(form)
         #Image URL is seperate, create it with the correspodning post
-        image_url = form.cleaned_data.get('image_url')
+        image_url = self.request.POST.get('image_url')
         if image_url:
-            Photo.objects.create(posts=self.object, image_url=image_url)
+            Photo(posts=self.object, image_url=image_url).save()
 
         return response
-
-    
-    def get_success_url(self) -> str:
-        pk = self.kwargs['pk']
-        return reverse('show_profile', kwargs={'pk':pk})
