@@ -1,0 +1,28 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/29/2026
+Description: Create Post form
+{% endcomment %}
+
+{% block content%}
+
+<h1> New Post </h1>
+<form method = 'POST'>
+    {% csrf_token %}
+    <table>
+        {% for field in form %}
+        <tr>
+        <th>{{field.name}}</th>
+        <td>{{field}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+        <td></td>
+        <td>
+            <input type='submit' name = 'Post' value= 'Post'>
+        </td>
+    </tr>
+    </table>
+</form>
+
+{%endblock%}
