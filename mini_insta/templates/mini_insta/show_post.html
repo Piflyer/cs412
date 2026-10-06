@@ -12,8 +12,8 @@ Description: Indivual Posts for book face
     <h2 style="margin: 0 0 0 12px;">@{{post.profile.username}}</h2>
 </a>
 </div>
-{% for image in post.get_Photos %}
-<img src="{{image.image_url}}" style="width: 500px; height: 500px; object-fit: cover; object-position: center;">
+{% for image in post.get_all_photos %}
+<img src="{{image.get_image_url}}" style="width: 500px; height: 500px; object-fit: cover; object-position: center;">
 {% endfor %}
 <h3> {{post.caption}}</h3>
 <p>Posted on: {{post.timestamp}}</p>

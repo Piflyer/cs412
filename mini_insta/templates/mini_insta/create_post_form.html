@@ -7,20 +7,27 @@ Description: Create Post form
 {% block content%}
 
 <h1> New Post </h1>
-<form method = 'POST'>
+<form method = 'POST' enctype="multipart/form-data">
     {% csrf_token %}
     <table>
         {% for field in form %}
         <tr>
         <th>{{field.name}}</th>
+        {% if field.name == "image_file"%}
+        <td>
+            <input type="file" accept="image/*" multiple name="image_file">
+        </td>
+        {% else %}
+       
         <td>{{field}}</td>
+        {% endif %}
         </tr>
         {% endfor %}
         <tr>
         <td></td>
         <td>
             <input type='submit' name = 'Post' value= 'Post'>
-                   <button type="button" onclick="location.href='{% url 'show_profile' view.kwargs.pk %}'">Cancel</button>
+                   <button type="button" onclick="location.href='{% url 'show_profile' profile.pk %}'">Cancel</button>
         </td>
     </tr>
     </table>

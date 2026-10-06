@@ -13,16 +13,20 @@ Description: Indivual Profiles for book face
         <h2 style="margin: 0;">@{{profile.username}}</h2>
         <p >{{profile.bio_text}}</p>
         <p style="margin-top: -10px">Joined: {{profile.join_date}}</p>
-        <p style="margin-top: -10px"> 300 Followers | 200 Following | 3 Posts | <a href="{% url 'create_post' profile.pk %}">Create a Post </a></p>
+        <p style="margin-top: -10px"> 300 Followers | 200 Following | 3 Posts</p>
     </div>
 </div>
 
 
 <div class=grid style="padding-bottom: 40px, padding-top: 30px">
-{% for post in profile.get_Posts %}
+{% for post in profile.get_all_posts %}
 <a href="{% url 'post' post.pk %}" style="text-decoration: none; color: black">
     <div id=instadiv style="padding: 0;">
-        <img src="{{post.get_Photos.first.image_url}}" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+        {% if post.get_all_photos %}
+        <img src="{{post.get_all_photos.first.get_image_url}}" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+        {% else%}
+        <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+        {% endif %}
     </div>
 </a>
 {% endfor %}

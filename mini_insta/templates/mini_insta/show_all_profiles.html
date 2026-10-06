@@ -8,7 +8,7 @@ Description: Show all profiles page for book face
 
 <h1>All Profiles</h1>
 <div class=grid style="padding-bottom: 40px">
-{% for prof in profile %}
+{% for prof in profiles %}
 <a href="{% url 'show_profile' prof.pk %}" style="text-decoration: none; color: black">
     <div id=instadiv>
         <h2>{{prof.display_name}}</h2>

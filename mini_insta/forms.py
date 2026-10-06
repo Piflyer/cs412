@@ -9,11 +9,11 @@ from .models import *
 
 class CreatePostForm(forms.ModelForm):
     '''Create a form to add a post'''
-    image_url = forms.URLField(required=False)
+    image_file = forms.ImageField(required=True)
 
     class Meta:
         '''associate this form with the model from our database'''
-        model = Posts
+        model = Post
         fields = ['caption']
         
     

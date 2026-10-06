@@ -21,9 +21,13 @@ Description: Base HTML file for mini_insta assignment
         {% endblock %}
         </main>
         <footer style="margin-top: auto; padding: 20px">
-            <a href="{% url 'show_all_profiles' %}">
-            Go Back
-            </a>
-        </footer>
+            <div id="floatbar">
+    <h3 style="margin-top:15px"><a href="{% url 'show_all_profiles' %}">Back</a> 
+    {% if profile %}
+            | <a href="{% url 'create_post' profile.pk %}">Post</a>
+        {% endif %}
+    </h3>
+</div>
+        </footer> 
     </body>
 </html>
