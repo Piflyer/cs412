@@ -72,3 +72,17 @@ a, a:visited {
     gap: 15px;
     margin-top: 50px;
 }
+
+#floatbar {
+    position: fixed;
+    z-index: 9999;
+    bottom: 50px;
+    width: 150px;
+    height: 50px;
+    background: white;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    border-radius: 30px;
+    box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.14), 0px 3px 6px 0px rgba(0,0,0,0.09), 0px 1px 10px 0px rgba(0,0,0,0.07);
+}
