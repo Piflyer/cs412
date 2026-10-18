@@ -1,0 +1,32 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/18/2026
+Description: Delete Post
+{% endcomment %}
+
+{% block content%}
+
+<h1> Delete Post </h1>
+<p>Are you sure you want to delete this post?</p>
+
+<div style="margin-bottom: 25px">
+    <a href="{% url 'show_profile' profile.pk %}" style="display: inline-flex; align-items: center; text-decoration: none;">
+        <img src="{{profile.profile_image_url}}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+        <h2 style="margin: 0 0 0 12px;">@{{profile.username}}</h2>
+    </a>
+</div>
+{% for image in post.get_all_photos %}
+<img src="{{image.get_image_url}}" style="width: 300px; height: 300px; object-fit: cover; object-position: center;">
+{% endfor %}
+<h3> {{post.caption}}</h3>
+<p>Posted on: {{post.timestamp}}</p>
+
+<form method = 'POST'>
+    {% csrf_token %}
+    <input type='submit' name = 'Delete' value= 'Delete'>
+    <button type="button" onclick="location.href='{% url 'post' post.pk %}'">Cancel</button>
+</form>
+
+{%endblock%}
+{% block floatbar_links %}{% endblock %}
+

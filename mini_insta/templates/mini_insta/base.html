@@ -22,10 +22,16 @@ Description: Base HTML file for mini_insta assignment
         </main>
         <footer style="margin-top: auto; padding: 20px">
             <div id="floatbar">
-    <h3 style="margin-top:15px"><a href="{% url 'show_all_profiles' %}">Back</a> 
-    {% if profile %}
+    <h3 style="margin-top:15px"><a href="{% url 'show_all_profiles' %}">Back</a>
+        {% block floatbar_links %}
+        {% if profile %}
             | <a href="{% url 'create_post' profile.pk %}">Post</a>
         {% endif %}
+        {% if post %}
+            | <a href="{% url 'update_post' post.pk %}">Update</a>
+            | <a href="{% url 'delete_post' post.pk %}">Delete</a>
+        {% endif %}
+        {% endblock %}
     </h3>
 </div>
         </footer> 
