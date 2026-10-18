@@ -24,7 +24,7 @@ Description: Delete Post
 <form method = 'POST'>
     {% csrf_token %}
     <input type='submit' name = 'Delete' value= 'Delete'>
-    <button type="button" onclick="location.href='{% url 'post' post.pk %}'">Cancel</button>
+        <button type="button" onclick="location.href='{% url 'show_profile' profile.pk %}'">Cancel</button>
 </form>
 
 {%endblock%}

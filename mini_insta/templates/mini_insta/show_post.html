@@ -32,8 +32,8 @@ Description: Indivual Posts for book face
 <h3> {{post.caption}}</h3>
 <p>Posted on: {{post.timestamp}}</p>
 <div style="padding-bottom: 120px">
-    <h3>Comments ({{ post.get_comments.count }})</h3>
-    {% for comment in post.get_comments %}
+    <h3>Comments ({{ post.get_all_comments.count }})</h3>
+    {% for comment in post.get_all_comments %}
     <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
         <a href="{% url 'show_profile' comment.profile.pk %}">
             <img src="{{comment.profile.profile_image_url}}" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">

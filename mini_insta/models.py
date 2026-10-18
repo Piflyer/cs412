@@ -88,9 +88,9 @@ class Post(models.Model):
         likes = Like.objects.filter(post=self)
         return likes
 
-    def get_comments(self):
+    def get_all_comments(self):
         '''return all Comments on this post, oldest first'''
-        comments = Comment.objects.filter(post=self).order_by('timestamp')
+        comments = Comment.objects.filter(post=self).order_by('-timestamp')
         return comments
 
 

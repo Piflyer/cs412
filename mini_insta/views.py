@@ -6,6 +6,8 @@ Desc : Manager for showing all profiles and individual profiles
 
 from typing import Any
 
+from django.http.request import HttpRequest as HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from .models import Profile, Post, Photo
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -139,4 +141,45 @@ class ShowFeedView(DetailView):
     model = Profile
     template_name = "mini_insta/show_feed.html"
     context_object_name = "profile"
+
+class SearchView(ListView):
+    '''Shows search results'''
+    template_name = "mini_insta/search_results.html"
+    context_object_name = "posts"
+    
+    def dispatch(self, request, *args, **kwargs):
+        '''show serach form if no query was made'''
+        if 'query' not in self.request.GET:
+            '''get profile we are saerching'''
+            pk = self.kwargs.get("pk")
+            profile = Profile.objects.get(pk=pk)
+            return render(request, "mini_insta/search.html", {'profile': profile})
+        return super().dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        '''return posts with matching captions'''
+        query = self.request.GET.get("query")
+        posts = Post.objects.filter(caption__contains=query).order_by("-timestamp")
+        return posts
+    def get_context_data(self, **kwargs):
+        '''Add profile and query to context data'''
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get("pk")
+        profile = Profile.objects.get(pk=pk)
+        query = self.request.GET.get("query")
+        
+        username = Profile.objects.filter(username__contains=query)
+        display_name = Profile.objects.filter(display_name__contains=query)
+        bio = Profile.objects.filter(bio_text__contains=query)
+        
+        profiles = []
+        for p in list(username) + list(display_name) + list(bio):
+            if p not in profiles:
+                profiles.append(p)
+        context['profile'] = profile
+        context['query'] = query
+        context['posts'] = self.get_queryset()
+        context['profiles'] = profiles
+        return context
+
+
 
