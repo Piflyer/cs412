@@ -57,6 +57,12 @@ class Profile(models.Model):
     def get_num_following(self):
         '''return the number of following'''
         return len(self.get_following())
+    
+    def get_post_feed(self):
+        '''gets posts from profiles that this user followed'''
+        following = self.get_following()
+        posts = Post.objects.filter(profile__in=following).order_by('-timestamp')
+        return posts
 
 
 class Post(models.Model):
@@ -114,6 +120,7 @@ class Photo(models.Model):
         return f"{self.image_url}, created on {self.timestamp}."
 
 class Follow(models.Model):
+    '''Follow model relating follower to following'''
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile")
     follower_profile = models.ForeignKey("Profile", on_delete=models.CASCADE,related_name="follower_profile")
     timestamp = models.DateTimeField(auto_now=True)
@@ -122,6 +129,7 @@ class Follow(models.Model):
         return f"{self.profile}, followed by {self.follower_profile}."
 
 class Comment(models.Model):
+    '''Linking coments to post and who posted them'''
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)
@@ -131,6 +139,7 @@ class Comment(models.Model):
         return f"{self.profile}, commented on {self.post}."
 
 class Like(models.Model):
+    '''Mapping likes to people'''
     post = models.ForeignKey("Post", on_delete=models.CASCADE)
     profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)

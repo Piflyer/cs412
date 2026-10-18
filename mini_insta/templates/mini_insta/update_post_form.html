@@ -6,7 +6,7 @@ Description: Update Post form
 
 {% block content%}
 
-<h1> New Post </h1>
+<h1> Update Post </h1>
 {% for photo in post.get_all_photos %}
     <img src="{{ photo.get_image_url }}" style="max-width: 150px;">
 {% endfor %}

@@ -18,14 +18,14 @@ Description: Indivual Profiles for book face
 </div>
 
 
-<div class=grid style="padding-bottom: 40px, padding-top: 30px">
+<div class=grid style="padding-bottom: 40px; padding-top: 30px">
 {% for post in profile.get_all_posts %}
 <a href="{% url 'post' post.pk %}" style="text-decoration: none; color: black">
     <div id=instadiv style="padding: 0;">
         {% if post.get_all_photos %}
         <img src="{{post.get_all_photos.first.get_image_url}}" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
         {% else%}
-        <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png" style="margin-top: 0px; width: 100%; height: 100%; object-fit: cover; object-position: center;">
         {% endif %}
     </div>
 </a>

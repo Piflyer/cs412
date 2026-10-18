@@ -8,6 +8,7 @@ Description: Base HTML file for mini_insta assignment
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>BookFace</title>
         <link rel="stylesheet" href="{% static 'styles.css' %}"> 
     </head>
@@ -21,8 +22,15 @@ Description: Base HTML file for mini_insta assignment
         {% endblock %}
         </main>
         <footer style="margin-top: auto; padding: 20px">
-            <div id="floatbar">
-    <h3 style="margin-top:15px"><a href="{% url 'show_all_profiles' %}">Back</a>
+                        <div id="floatbar">
+    <h3 style="margin-top:15px">
+        {% if profile %}
+            <a href="{% url 'show_feed' profile.pk %}">Home</a>
+        {% elif post %}
+            <a href="{% url 'show_feed' post.profile.pk %}">Home</a>
+        {% else %}
+            <a href="{% url 'show_all_profiles' %}">Back</a>
+        {% endif %}
         {% block floatbar_links %}
         {% if profile %}
             | <a href="{% url 'create_post' profile.pk %}">Post</a>
@@ -30,6 +38,11 @@ Description: Base HTML file for mini_insta assignment
         {% if post %}
             | <a href="{% url 'update_post' post.pk %}">Update</a>
             | <a href="{% url 'delete_post' post.pk %}">Delete</a>
+        {% endif %}
+        {% if profile %}
+            | <a href="{% url 'show_profile' profile.pk %}">Profile</a>
+        {% elif post %}
+            | <a href="{% url 'show_profile' post.profile.pk %}">Profile</a>
         {% endif %}
         {% endblock %}
     </h3>

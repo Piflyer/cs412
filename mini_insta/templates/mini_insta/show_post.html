@@ -12,9 +12,22 @@ Description: Indivual Posts for book face
     <h2 style="margin: 0 0 0 12px;">@{{post.profile.username}}</h2>
 </a>
 </div>
-{% for image in post.get_all_photos %}
-<img src="{{image.get_image_url}}" style="width: 500px; height: 500px; object-fit: cover; object-position: center;">
-{% endfor %}
+
+<div class="carousel-wrap">
+    <div class="carousel">
+        {% for image in post.get_all_photos %}
+        <img src="{{image.get_image_url}}" class="carousel-slide">
+        {% empty %}
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png" class="carousel-slide">
+        {% endfor %}
+    </div>
+    {% if post.get_all_photos.count > 1 %}
+    <button type="button" class="carousel-btn prev" onclick="this.parentElement.querySelector('.carousel').scrollBy({left: -this.parentElement.offsetWidth})">&#8249;</button>
+    <button type="button" class="carousel-btn next" onclick="this.parentElement.querySelector('.carousel').scrollBy({left: this.parentElement.offsetWidth})">&#8250;</button>
+    <span class="carousel-count">{{ post.get_all_photos.count }} photos</span>
+    {% endif %}
+</div>
+
 <p style="margin-bottom: -10px"><strong>{{ post.get_likes.count }} Likes</strong></p>
 <h3> {{post.caption}}</h3>
 <p>Posted on: {{post.timestamp}}</p>

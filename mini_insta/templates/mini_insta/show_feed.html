@@ -1,0 +1,53 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/18/2026
+Description: Post feed for a profile for book face
+{% endcomment %}
+
+{% block content%}
+
+<div class="feed">
+<h1><a href="{% url 'show_profile' profile.pk %}">@{{profile.username}}</a>'s Feed</h1>
+
+{% for post in profile.get_post_feed %}
+<div class="feed-post">
+    <a href="{% url 'show_profile' post.profile.pk %}" style="display: inline-flex; align-items: center; margin-bottom: 10px;">
+        <img src="{{post.profile.profile_image_url}}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+        <strong style="margin-left: 10px;">@{{post.profile.username}}</strong>
+    </a>
+
+    <div class="carousel-wrap">
+        <div class="carousel">
+            {% for image in post.get_all_photos %}
+            <img src="{{image.get_image_url}}" class="carousel-slide">
+            {% empty %}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1920px-No-Image-Placeholder.svg.png" class="carousel-slide">
+            {% endfor %}
+        </div>
+        {% if post.get_all_photos.count > 1 %}
+        <button type="button" class="carousel-btn prev" onclick="this.parentElement.querySelector('.carousel').scrollBy({left: -this.parentElement.offsetWidth})">&#8249;</button>
+        <button type="button" class="carousel-btn next" onclick="this.parentElement.querySelector('.carousel').scrollBy({left: this.parentElement.offsetWidth})">&#8250;</button>
+        <span class="carousel-count">{{ post.get_all_photos.count }} photos</span>
+        {% endif %}
+    </div>
+
+    <p style="margin-bottom: 0;"><strong>{{ post.get_likes.count }} Likes</strong></p>
+    <p style="margin-top: 5px;"><strong>@{{post.profile.username}}</strong> {{post.caption}}</p>
+
+    {% for comment in post.get_comments|slice:":2" %}
+    <p style="margin: 2px 0;"><strong>@{{comment.profile.username}}</strong> {{comment.text}}</p>
+    {% endfor %}
+    {% if post.get_comments.count > 2 %}
+    <a href="{% url 'post' post.pk %}" style="color: gray;">View all {{ post.get_comments.count }} comments</a>
+    {% endif %}
+
+    <div style="font-size: 12px; color: gray; margin-top: 5px;">
+        <a href="{% url 'post' post.pk %}" style="color: gray;">{{post.timestamp}}</a>
+    </div>
+</div>
+{% empty %}
+<p>Your feed is empty. Follow some profiles to see their posts here.</p>
+{% endfor %}
+</div>
+
+{%endblock%}
