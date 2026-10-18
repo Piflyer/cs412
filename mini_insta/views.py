@@ -8,8 +8,8 @@ from typing import Any
 
 from django.shortcuts import render
 from .models import Profile, Post, Photo
-from django.views.generic import ListView, DetailView, CreateView
-from .forms import CreatePostForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from .forms import CreatePostForm, UpdateProfileForm
 from django.urls import reverse
 
 
@@ -59,3 +59,14 @@ class CreatePostView(CreateView):
             Photo(post=self.object, image_file=image).save()
 
         return response
+
+class UpdateProfileView(UpdateView):
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_insta/update_profile_form.html"
+    
+    def form_valid(self, form):
+        '''
+        Validate our updated profile
+        '''
+        return super().form_valid(form)

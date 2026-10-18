@@ -1,0 +1,36 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/18/2026
+Description: Update Profile
+{% endcomment %}
+
+{% block content%}
+
+<h1> Update Profile </h1>
+<form method = 'POST' enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {% for field in form %}
+        <tr>
+        <th>{{field.name}}</th>
+        {% if field.name == "image_file"%}
+        <td>
+            <input type="file" accept="image/*" multiple name="image_file">
+        </td>
+        {% else %}
+       
+        <td>{{field}}</td>
+        {% endif %}
+        </tr>
+        {% endfor %}
+        <tr>
+        <td></td>
+        <td>
+            <input type='submit' name = 'Post' value= 'Post'>
+                   <button type="button" onclick="location.href='{% url 'show_profile' profile.pk %}'">Cancel</button>
+        </td>
+    </tr>
+    </table>
+</form>
+
+{%endblock%}

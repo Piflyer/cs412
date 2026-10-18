@@ -25,6 +25,11 @@ class Profile(models.Model):
     
     def __str__(self):
         return f"{self.username}, created on {self.join_date}."
+    
+    def get_absolute_url(self):
+        '''return the URL to display this profile'''
+        return reverse('show_profile', kwargs={'pk': self.pk})
+
 
 class Post(models.Model):
     ''' 
