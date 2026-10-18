@@ -1,0 +1,25 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 9/29/2026
+Description: Show all Followers page for book face
+{% endcomment %}
+
+{% block content%}
+
+<h1>All Following</h1>
+<div class=grid style="padding-bottom: 40px">
+{% for prof in profile.get_following %}
+<a href="{% url 'show_profile' prof.pk %}" style="text-decoration: none; color: black">
+    <div id=instadiv>
+        <h2>{{prof.display_name}}</h2>
+        <h3 style="margin-top: -15px">@{{prof.username}}</h3>
+        <img src="{{prof.profile_image_url}}" style="margin-top: -15px; width: 100px; height: 100px; object-fit: cover; object-position: center;">
+        <p>{{prof.bio_text}}</p>
+        <p>Joined: {{prof.join_date}}</p>
+    </div>
+</a>
+{% empty %}
+<p>No users following yet.</p>
+{% endfor %}
+</div>
+{%endblock%}

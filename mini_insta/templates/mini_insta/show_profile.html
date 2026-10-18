@@ -13,7 +13,7 @@ Description: Indivual Profiles for book face
         <h2 style="margin: 0;">@{{profile.username}}</h2>
         <p >{{profile.bio_text}}</p>
         <p style="margin-top: -10px">Joined: {{profile.join_date}}</p>
-        <p style="margin-top: -10px"> 300 Followers | 200 Following | 3 Posts</p>
+        <p style="margin-top: -10px"><a href="{% url 'show_followers' profile.pk %}">{{ profile.get_num_followers }} Followers</a> | <a href="{% url 'show_following' profile.pk %}">{{ profile.get_num_following }} Following</a> | {{ profile.get_all_posts.count }} Posts</p>
     </div>
 </div>
 

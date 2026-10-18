@@ -29,6 +29,34 @@ class Profile(models.Model):
     def get_absolute_url(self):
         '''return the URL to display this profile'''
         return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    def get_followers(self):
+        '''
+        List of followers
+        '''
+        follow = Follow.objects.filter(profile=self)
+        return [follower.follower_profile for follower in follow]
+    
+    def get_num_followers(self):
+        '''return the number of followers'''
+        return len(self.get_followers())
+    
+    def get_following(self):
+        '''
+        List of following
+        '''
+        follow = Follow.objects.filter(follower_profile=self)
+        return [follower.profile for follower in follow]
+
+    def get_num_post(self):
+        '''
+        Num of Posts
+        '''
+        return len(self.get_all_posts())
+    
+    def get_num_following(self):
+        '''return the number of following'''
+        return len(self.get_following())
 
 
 class Post(models.Model):
@@ -48,6 +76,18 @@ class Post(models.Model):
     def get_absolute_url(self):
         '''get the post url'''
         return reverse('post', kwargs={'pk': self.pk})
+    
+    def get_likes(self):
+        '''return all Likes on this post'''
+        likes = Like.objects.filter(post=self)
+        return likes
+
+    def get_comments(self):
+        '''return all Comments on this post, oldest first'''
+        comments = Comment.objects.filter(post=self).order_by('timestamp')
+        return comments
+
+
     
     def __str__(self):
         return f"{self.caption}, created on {self.timestamp}."
@@ -72,3 +112,28 @@ class Photo(models.Model):
         if self.image_file:
             return f"{self.image_file.url}, created on {self.timestamp}."
         return f"{self.image_url}, created on {self.timestamp}."
+
+class Follow(models.Model):
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="profile")
+    follower_profile = models.ForeignKey("Profile", on_delete=models.CASCADE,related_name="follower_profile")
+    timestamp = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.profile}, followed by {self.follower_profile}."
+
+class Comment(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True)
+    text = models.TextField(blank=True)
+    
+    def __str__(self):
+        return f"{self.profile}, commented on {self.post}."
+
+class Like(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    profile = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.profile}, liked {self.post}."

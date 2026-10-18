@@ -7,7 +7,10 @@ Desc : Admin management page for mini_insta
 from django.contrib import admin
 
 # Register your models here.
-from .models import Profile, Post, Photo
+from .models import Profile, Post, Photo, Follow, Like, Comment
 admin.site.register(Profile)
 admin.site.register(Post)
 admin.site.register(Photo)
+admin.site.register(Follow)
+admin.site.register(Like)
+admin.site.register(Comment)
