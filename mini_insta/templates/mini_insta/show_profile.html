@@ -14,7 +14,9 @@ Description: Indivual Profiles for book face
         <p >{{profile.bio_text}}</p>
         <p style="margin-top: -10px">Joined: {{profile.join_date}}</p>
         <p style="margin-top: -10px"><a href="{% url 'show_followers' profile.pk %}">{{ profile.get_num_followers }} Followers</a> | <a href="{% url 'show_following' profile.pk %}">{{ profile.get_num_following }} Following</a> | {{ profile.get_all_posts.count }} Posts</p>
-        <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
+        {% if request.user == profile.user %}
+            <a href="{% url 'update_profile' %}">Update Profile</a>
+        {% endif %}
     </div>
 </div>
 

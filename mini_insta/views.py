@@ -6,6 +6,8 @@ Desc : Manager for showing all profiles and individual profiles
 
 from typing import Any
 
+from django.db.models.base import Model as Model
+from django.db.models.query import QuerySet
 from django.http.request import HttpRequest as HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
@@ -13,10 +15,18 @@ from .models import Profile, Post, Photo
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
 # Create your views here.
+
+class CustomLoginRequiredMixin(LoginRequiredMixin):
+    '''Custom Mixin for self.request user and login url'''
+    def get_login_url(self) -> str:
+        return reverse('login')
+    def get_profile(self):
+        return Profile.objects.filter(user=self.request.user).first()
 
 class ProfileListView(ListView):
     '''Show all the available Profiles'''
@@ -36,23 +46,20 @@ class PostDetailView(DetailView):
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
 
-class CreatePostView(CreateView):
+class CreatePostView(CustomLoginRequiredMixin, CreateView):
     '''Create a new post for a profile'''
     form_class = CreatePostForm
     template_name = "mini_insta/create_post_form.html"
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-        context['profile'] = profile
+        context['profile'] = self.get_profile()
         return context
 
     def form_valid(self, form):
         # get PK from URL
-        pk = self.kwargs['pk']
-        profile = Profile.objects.get(pk=pk)
-        form.instance.profile = profile
+        user = self.get_profile()
+        form.instance.profile = user
         response = super().form_valid(form)
         #Image URL is seperate, create it with the correspodning post
         # image_file = self.request.POST.get('image_file')
@@ -62,7 +69,10 @@ class CreatePostView(CreateView):
 
         return response
 
-class UpdateProfileView(UpdateView):
+    def get_login_url(self) -> str:
+        '''return the URL required for login'''
+        return reverse('login')
+class UpdateProfileView(CustomLoginRequiredMixin, UpdateView):
     '''
     Handles profile Updates
     '''
@@ -74,9 +84,13 @@ class UpdateProfileView(UpdateView):
         '''
         Validate our updated profile
         '''
+        user = self.request.user
+        form.instance.profile = user
         return super().form_valid(form)
-
-class UpdatePostView(UpdateView):
+    
+    def get_object(self):
+        return self.get_profile()
+class UpdatePostView(CustomLoginRequiredMixin, UpdateView):
     '''
     Handles profile Updates
     '''
@@ -94,7 +108,7 @@ class UpdatePostView(UpdateView):
         return response
 
 
-class DeletePostView(DeleteView):
+class DeletePostView(CustomLoginRequiredMixin, DeleteView):
     '''A view to delete a post and remove it from the database.'''
     model = Post
     template_name = 'mini_insta/delete_post_form.html'
@@ -136,23 +150,27 @@ class ShowFollowingDetailView(DetailView):
     template_name = "mini_insta/show_following.html"
     context_object_name = "profile"
 
-class ShowFeedView(DetailView):
+class ShowFeedView(CustomLoginRequiredMixin, DetailView):
     '''show each users personalized feed'''
     model = Profile
     template_name = "mini_insta/show_feed.html"
     context_object_name = "profile"
 
-class SearchView(ListView):
+    def get_object(self):
+        return self.get_profile()
+
+class SearchView(CustomLoginRequiredMixin, ListView):
     '''Shows search results'''
     template_name = "mini_insta/search_results.html"
     context_object_name = "posts"
     
     def dispatch(self, request, *args, **kwargs):
         '''show serach form if no query was made'''
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
         if 'query' not in self.request.GET:
             '''get profile we are saerching'''
-            pk = self.kwargs.get("pk")
-            profile = Profile.objects.get(pk=pk)
+            profile = self.get_profile()
             return render(request, "mini_insta/search.html", {'profile': profile})
         return super().dispatch(request, *args, **kwargs)
     def get_queryset(self):
@@ -163,8 +181,7 @@ class SearchView(ListView):
     def get_context_data(self, **kwargs):
         '''Add profile and query to context data'''
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs.get("pk")
-        profile = Profile.objects.get(pk=pk)
+        profile = self.get_profile()
         query = self.request.GET.get("query")
         
         username = Profile.objects.filter(username__contains=query)
@@ -181,5 +198,8 @@ class SearchView(ListView):
         context['profiles'] = profiles
         return context
 
+class MyProfileView(CustomLoginRequiredMixin, ProfileDetailView):
+    def get_object(self):
+        return self.get_profile()
 
 

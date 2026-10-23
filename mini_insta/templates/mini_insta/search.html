@@ -7,7 +7,7 @@ Description: Search form for book face
 {% block content%}
 
 <h1>Search</h1>
-<form method="GET" action="{% url 'search' profile.pk %}">
+<form method="GET" action="{% url 'search' %}">
     <input type="text" name="query" placeholder="Search profiles and posts...">
     <br>
     <input type="submit" value="Search">

@@ -1,0 +1,14 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/18/2026
+Description: Login page for auth user
+{% endcomment %}
+{% block content %}
+<h1>Login</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <input type="submit" value="Log in">
+</form>
+{% endblock %}
