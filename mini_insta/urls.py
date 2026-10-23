@@ -5,7 +5,7 @@ Desc : URLs management for mini_insta
 """
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import ProfileListView, ProfileDetailView, PostDetailView, CreatePostView, UpdateProfileView, DeletePostView, UpdatePostView, ShowFollowersDetailView, ShowFollowingDetailView, ShowFeedView, SearchView, MyProfileView, CreateProfileView
+from .views import ProfileListView, ProfileDetailView, PostDetailView, CreatePostView, UpdateProfileView, DeletePostView, UpdatePostView, ShowFollowersDetailView, ShowFollowingDetailView, ShowFeedView, SearchView, MyProfileView, CreateProfileView, FollowView, DeleteFollowView, LikeView, DeleteLikeView
 
 urlpatterns = [
     path('', ProfileListView.as_view(), name="show_all_profiles"),
@@ -23,6 +23,9 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='mini_insta/login.html', next_page='show_feed'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='mini_insta/logged_out.html'), name='logout'),
     path('create_profile', CreateProfileView.as_view(), name='create_profile'),
-
+    path('profile/<int:pk>/follow', FollowView.as_view(), name='follow'),
+    path('profile/<int:pk>/delete_follow', DeleteFollowView.as_view(), name='delete_follow'),
+    path('post/<int:pk>/like', LikeView.as_view(), name='like'),
+    path('post/<int:pk>/delete_like', DeleteLikeView.as_view(), name='delete_like'),
 ]
 

@@ -28,7 +28,14 @@ Description: Indivual Posts for book face
     {% endif %}
 </div>
 
-<p style="margin-bottom: -10px"><strong>{{ post.get_likes.count }} Likes</strong></p>
+<p style="margin-bottom: 10px"><strong>{{ post.get_likes.count }} Likes</strong></p>
+{% if request.user.is_authenticated and request.user != post.profile.user %}
+    {% if has_liked %}
+        <a href="{% url 'delete_like' post.pk %}">Unlike</a>
+    {% else %}
+        <a href="{% url 'like' post.pk %}">Like</a>
+    {% endif %}
+{% endif %}
 <h3> {{post.caption}}</h3>
 <p>Posted on: {{post.timestamp}}</p>
 <div style="padding-bottom: 120px">

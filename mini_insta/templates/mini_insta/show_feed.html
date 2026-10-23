@@ -31,7 +31,14 @@ Description: Post feed for a profile for book face
         {% endif %}
     </div>
 
-    <p style="margin-bottom: 0;"><strong>{{ post.get_likes.count }} Likes</strong></p>
+    <p style="margin-bottom: 10;"><strong>{{ post.get_likes.count }} Likes</strong></p>
+    {% if request.user != post.profile.user %}
+    {% if post.pk in liked_ids %}
+        <a href="{% url 'delete_like' post.pk %}?next={{ request.path }}">Unlike</a>
+    {% else %}
+        <a href="{% url 'like' post.pk %}?next={{ request.path }}">Like</a>
+    {% endif %}
+{% endif %}
     <p style="margin-top: 5px;"><strong>@{{post.profile.username}}</strong> {{post.caption}}</p>
 
     {% for comment in post.get_all_comments|slice:":2" %}

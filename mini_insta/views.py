@@ -11,9 +11,9 @@ from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest as HttpRequest
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import render
-from .models import Profile, Post, Photo
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect
+from .models import Profile, Post, Photo, Follow, Like
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -28,11 +28,61 @@ class CustomLoginRequiredMixin(LoginRequiredMixin):
     def get_profile(self):
         return Profile.objects.filter(user=self.request.user).first()
 
+class FollowView(CustomLoginRequiredMixin, TemplateView):
+    '''Logged in user can follow another profile'''
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        curUser = self.get_profile()
+        following = Profile.objects.get(pk=self.kwargs['pk'])
+        if curUser != following:
+            Follow.objects.get_or_create(profile=following, follower_profile=curUser)
+        return redirect('show_profile', pk=following.pk)
+
+class DeleteFollowView(CustomLoginRequiredMixin, TemplateView):
+    '''Logged in user can unfollow another profile'''
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        curUser = self.get_profile()
+        following = Profile.objects.get(pk=self.kwargs['pk'])
+        Follow.objects.filter(profile=following, follower_profile=curUser).delete()
+        return redirect('show_profile', pk=following.pk)
+
+class LikeView(CustomLoginRequiredMixin, TemplateView):
+    '''Logged in user can like another profile'''
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        curUser = self.get_profile()
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        Like.objects.get_or_create(post=post, profile=curUser)
+        next_url = request.GET.get('next')
+        if next_url:
+            return redirect(next_url)
+        return redirect('post', pk=post.pk)
+
+
+class DeleteLikeView(CustomLoginRequiredMixin, TemplateView):
+    '''Logged in user can unlike another profile'''
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+        curUser = self.get_profile()
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        Like.objects.filter(post=post, profile=curUser).delete()
+        next_url = request.GET.get('next')
+        if next_url:
+            return redirect(next_url)
+        return redirect('post', pk=post.pk)
+
+
 class CreateProfileView(CreateView):
     '''Create a new account'''
     template_name = 'mini_insta/create_profile_form.html'
     form_class = CreateProfileForm
     def get_context_data(self, **kwargs):
+        #get new form input context
         context = super().get_context_data(**kwargs)
         context['form_input'] = UserCreationForm()
         return context
@@ -55,12 +105,30 @@ class ProfileDetailView(DetailView):
     model = Profile
     template_name = "mini_insta/show_profile.html"
     context_object_name = "profile"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            me = Profile.objects.filter(user=self.request.user).first()
+            context['is_following'] = Follow.objects.filter(
+                profile=self.object, follower_profile=me).exists()
+        return context
+
 
 class PostDetailView(DetailView):
     '''show each indivual post seperately'''
     model = Post
     template_name = "mini_insta/show_post.html"
     context_object_name = "post"
+    
+    def get_context_data(self, **kwargs):
+        # get like objects
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            me = Profile.objects.filter(user=self.request.user).first()
+            context['has_liked'] = Like.objects.filter(
+                post=self.object, profile=me).exists()
+        return context
 
 class CreatePostView(CustomLoginRequiredMixin, CreateView):
     '''Create a new post for a profile'''
@@ -68,6 +136,7 @@ class CreatePostView(CustomLoginRequiredMixin, CreateView):
     template_name = "mini_insta/create_post_form.html"
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        # get profile data
         context = super().get_context_data(**kwargs)
         context['profile'] = self.get_profile()
         return context
@@ -173,7 +242,16 @@ class ShowFeedView(CustomLoginRequiredMixin, DetailView):
     context_object_name = "profile"
 
     def get_object(self):
+        '''Get profile'''
         return self.get_profile()
+
+    def get_context_data(self, **kwargs):
+        '''Get context data to add in for likes'''
+        context = super().get_context_data(**kwargs)
+        context['liked_ids'] = Like.objects.filter(
+            profile=self.get_profile()).values_list('post_id', flat=True)
+        return context
+
 
 class SearchView(CustomLoginRequiredMixin, ListView):
     '''Shows search results'''

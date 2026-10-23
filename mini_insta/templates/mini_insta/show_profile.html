@@ -16,6 +16,12 @@ Description: Indivual Profiles for book face
         <p style="margin-top: -10px"><a href="{% url 'show_followers' profile.pk %}">{{ profile.get_num_followers }} Followers</a> | <a href="{% url 'show_following' profile.pk %}">{{ profile.get_num_following }} Following</a> | {{ profile.get_all_posts.count }} Posts</p>
         {% if request.user == profile.user %}
             <a href="{% url 'update_profile' %}">Update Profile</a>
+        {% elif request.user.is_authenticated %}
+            {% if is_following %}
+                <a href="{% url 'delete_follow' profile.pk %}">Unfollow</a>
+            {% else %}
+                <a href="{% url 'follow' profile.pk %}">Follow</a>
+            {% endif %}
         {% endif %}
     </div>
 </div>
