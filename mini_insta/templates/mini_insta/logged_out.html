@@ -1,0 +1,9 @@
+{% extends 'mini_insta/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/22/2026
+Description: Logout confirmation page
+{% endcomment %}
+{% block content %}
+<h1>Successfully Logged out</h1>
+<a href="{% url 'login' %}">Log back in</a>
+{% endblock %}

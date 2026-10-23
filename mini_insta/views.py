@@ -5,7 +5,8 @@ Desc : Manager for showing all profiles and individual profiles
 '''
 
 from typing import Any
-
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest as HttpRequest
@@ -13,20 +14,35 @@ from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render
 from .models import Profile, Post, Photo
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm
+from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
 # Create your views here.
-
 class CustomLoginRequiredMixin(LoginRequiredMixin):
     '''Custom Mixin for self.request user and login url'''
     def get_login_url(self) -> str:
         return reverse('login')
     def get_profile(self):
         return Profile.objects.filter(user=self.request.user).first()
+
+class CreateProfileView(CreateView):
+    '''Create a new account'''
+    template_name = 'mini_insta/create_profile_form.html'
+    form_class = CreateProfileForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_input'] = UserCreationForm()
+        return context
+    def form_valid(self, form):
+        user_form = UserCreationForm(self.request.POST)
+        #save form
+        user = user_form.save()
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        form.instance.user = user
+        return super().form_valid(form)
 
 class ProfileListView(ListView):
     '''Show all the available Profiles'''
