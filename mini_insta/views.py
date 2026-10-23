@@ -24,8 +24,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class CustomLoginRequiredMixin(LoginRequiredMixin):
     '''Custom Mixin for self.request user and login url'''
     def get_login_url(self) -> str:
+        # move to login url
         return reverse('login')
     def get_profile(self):
+        # get the user
         return Profile.objects.filter(user=self.request.user).first()
 
 class FollowView(CustomLoginRequiredMixin, TemplateView):
@@ -56,7 +58,8 @@ class LikeView(CustomLoginRequiredMixin, TemplateView):
             return self.handle_no_permission()
         curUser = self.get_profile()
         post = Post.objects.get(pk=self.kwargs['pk'])
-        Like.objects.get_or_create(post=post, profile=curUser)
+        if post.profile != curUser:
+            Like.objects.get_or_create(post=post, profile=curUser)
         next_url = request.GET.get('next')
         if next_url:
             return redirect(next_url)
@@ -107,6 +110,7 @@ class ProfileDetailView(DetailView):
     context_object_name = "profile"
     
     def get_context_data(self, **kwargs):
+        # get context behind who is following add return that
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             me = Profile.objects.filter(user=self.request.user).first()
@@ -182,7 +186,10 @@ class UpdatePostView(CustomLoginRequiredMixin, UpdateView):
     model = Post
     form_class = UpdatePostForm
     template_name = "mini_insta/update_post_form.html"
-    
+    def get_queryset(self):
+        '''Only allow the logged-in user's own posts'''
+        return Post.objects.filter(profile=self.get_profile())
+
     def form_valid(self, form):
         '''
         Validate our updated profile
@@ -197,6 +204,10 @@ class DeletePostView(CustomLoginRequiredMixin, DeleteView):
     '''A view to delete a post and remove it from the database.'''
     model = Post
     template_name = 'mini_insta/delete_post_form.html'
+    
+    def get_queryset(self):
+        '''Only allow the logged-in user's own posts'''
+        return Post.objects.filter(profile=self.get_profile())
 
     def get_context_data(self, **kwargs):
         '''Provide the post and the profile that made it to the template.'''

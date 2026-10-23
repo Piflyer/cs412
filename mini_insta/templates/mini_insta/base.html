@@ -45,11 +45,13 @@ Description: Base HTML file for mini_insta assignment
     {% if post and request.user == post.profile.user %}
         | <a href="{% url 'update_post' post.pk %}">Update</a>
         | <a href="{% url 'delete_post' post.pk %}">Delete</a>
-    {% else %}
-    <a href="{% url 'login' %}">Log in</a>
-    | <a href="{% url 'create_profile' %}">Create Profile</a>
+    {% endif %}
+    {% if not request.user.is_authenticated %}
+        <a href="{% url 'login' %}">Log in</a>
+        | <a href="{% url 'create_profile' %}">Create Profile</a>
     {% endif %}
     {% endblock %}
+
 </h3>
 </div>
         </footer> 
