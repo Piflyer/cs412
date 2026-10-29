@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "quotes", #Quotes app isntalled
     "restaurant", #restaurant app installed
     "mini_insta", # mini Instagram
+    "voter_analytics", #voter project  
 ]
 
 MIDDLEWARE = [
