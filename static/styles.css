@@ -153,3 +153,7 @@ a, a:visited {
 .feed-post {
     margin-bottom: 40px;
 }
+
+.row {
+    height: 450px;
+}

@@ -1,3 +1,7 @@
+from django.db.models import Count
+from django.db.models.functions import ExtractYear
+import plotly
+import plotly.graph_objs as go
 from django.db.models import Min, Max
 from django.db.models.query import QuerySet
 from django.shortcuts import render
@@ -18,6 +22,7 @@ class VoterListView(ListView):
     context_object_name = "voters"
     paginate_by = 100
     def get_queryset(self):
+        '''Popualte drop down with queryset'''
         qs = super().get_queryset().order_by('last_name', 'first_name')
         g = self.request.GET
         #populate our list of options
@@ -54,6 +59,50 @@ class VoterDetailView(DetailView):
     template_name = 'voter_analytics/voter_detail.html'
     model = Voter
     context_object_name = 'voter'
+
+class GraphListView(VoterListView):
+    '''Show all fields for one graph'''
+    template_name = 'voter_analytics/graphs.html'
+    paginate_by = None
+    def get_context_data(self, **kwargs):
+        '''Load our graphs'''
+        context = super().get_context_data(**kwargs)
+        voters = self.get_queryset() 
+
+        # 1) Bar chart: voters by year of birth
+        by_year = (voters.annotate(year=ExtractYear('dob'))
+                        .values('year')
+                        .annotate(n=Count('id'))
+                        .order_by('year'))
+        x = [row['year'] for row in by_year]
+        y = [row['n'] for row in by_year]
+        fig = go.Bar(x=x, y=y)
+        context['graph_div_birth'] = plotly.offline.plot(
+            {"data": [fig],
+            "layout_title_text": f"Voter distribution by Year of Birth (n={voters.count()})"},
+            auto_open=False, output_type="div")
+
+        # 2) Pie chart: voters by party
+        by_party = voters.values('party').annotate(n=Count('id')).order_by('-n')
+        labels = [row['party'] for row in by_party]
+        values = [row['n'] for row in by_party]
+        fig = go.Pie(labels=labels, values=values)
+        context['graph_div_party'] = plotly.offline.plot(
+            {"data": [fig],
+            "layout_title_text": "Voter distribution by Party Affiliation"},
+            auto_open=False, output_type="div")
+
+        # 3) Bar chart: how many voted in each election
+        x = ELECTIONS
+        y = [voters.filter(**{e: True}).count() for e in ELECTIONS]
+        fig = go.Bar(x=x, y=y)
+        context['graph_div_elections'] = plotly.offline.plot(
+            {"data": [fig],
+            "layout_title_text": "Vote Count by Election"},
+            auto_open=False, output_type="div")
+
+        return context
+
 
 
 
