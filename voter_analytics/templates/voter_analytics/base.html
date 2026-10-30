@@ -1,0 +1,28 @@
+{% load static %}
+
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 10/30/2026
+Description: Base HTML file for Voter Analytics
+{% endcomment %}
+
+<html>
+    <head>
+        <title>Voter Analytics</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+    </head>
+    <body>
+        <header>
+            <li><a href="{% url 'voters' %}">All Voters</a></li>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                </ul>
+ 
+            </nav>
+        </header>
+    
+    {% block content %}
+    {% endblock %}    
+  
+    </body>
+</html>
