@@ -1,0 +1,9 @@
+{% extends 'dadjokes/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 11/12/2026
+Description: Loads a single joke
+{% endcomment %}
+{% block content %}
+    <blockquote>"{{joke.jokes}}"</blockquote>
+    <p>Joke by: {{joke.contributor}}</p>
+{% endblock %}

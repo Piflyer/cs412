@@ -1,0 +1,24 @@
+{% load static %}
+
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 11/12/2026
+Description: Base HTML file for navigation
+{% endcomment %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Joker</title>
+        <link rel="stylesheet" href="{% static 'styles.css' %}"> 
+    </head>
+    <body>
+        <header>
+            <h1> Joke of the Day </h1>
+            <a href="{% url 'random' %}">Random Joke</a> |
+            <a href="{% url 'jokes' %}">Show All Jokes</a> |
+            <a href="{% url 'pictures' %}">Show All Pictures</a>
+        </header>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

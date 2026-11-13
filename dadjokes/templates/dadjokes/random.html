@@ -1,0 +1,12 @@
+{% extends 'dadjokes/base.html' %}
+{% comment %}
+Author: Tim Nguyen (tim7@bu.edu), 11/12/2026
+Description: Loads a single quote random joke
+{% endcomment %}
+{% block content %}
+    <h2>Today's Joke</h2>
+    <blockquote>"{{joke.jokes}}"</blockquote>
+    <p>Joke by: {{joke.contributor}}</p>
+    <img src="{{ picture.image_url }}" alt="Photo" style="max-width: 1060px; width: 100vw; height: auto;">
+    <p>Picture by: {{picture.contributor}}</p>
+{% endblock %}

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "restaurant", #restaurant app installed
     "mini_insta", # mini Instagram
     "voter_analytics", #voter project  
+    "dadjokes", #dadjokes
+    "rest_framework", # Django REST framework
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,7 @@ if socket.gethostname() == CS_DEPLOYMENT_HOSTNAME:
     STATIC_URL = '/tim7/static/'
     MEDIA_URL = '/tim7/media/'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
