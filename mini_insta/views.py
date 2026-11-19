@@ -11,12 +11,20 @@ from django.db.models.base import Model as Model
 from django.db.models.query import QuerySet
 from django.http.request import HttpRequest as HttpRequest
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import render, redirect
-from .models import Profile, Post, Photo, Follow, Like
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
+from .models import Profile, Post, Photo, Follow, Like, Comment
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from .forms import CreatePostForm, UpdateProfileForm, UpdatePostForm, CreateProfileForm
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from .serializers import ProfileSerializer, PostSerializer, CommentSerializer, UserSerializer
+
 
 
 
@@ -304,7 +312,180 @@ class SearchView(CustomLoginRequiredMixin, ListView):
         return context
 
 class MyProfileView(CustomLoginRequiredMixin, ProfileDetailView):
+    '''Return profile view'''
     def get_object(self):
         return self.get_profile()
 
+def get_viewer_profile(request):
+    '''Return the Profile named by ?viewer=<id>, or 404.'''
+    return get_object_or_404(Profile, pk=request.query_params.get('viewer'))
+
+
+class ProfileListAPIView(generics.ListAPIView):
+    '''
+    API view to return a listing of all Profiles.
+    Optional ?search=<text> matches username, display name, or bio.
+    '''
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        '''Return all profiles, filtered by ?search= if given.'''
+        profiles = Profile.objects.all().order_by('username')
+        query = self.request.query_params.get('search')
+        if query:
+            profiles = profiles.filter(
+                Q(username__icontains=query) |
+                Q(display_name__icontains=query) |
+                Q(bio_text__icontains=query))
+        return profiles
+
+
+class ProfileDetailAPIView(generics.RetrieveUpdateAPIView):
+    '''API view to return (GET) or update (PATCH) one Profile by pk.'''
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
+class ProfilePostsAPIView(generics.ListAPIView):
+    '''API view to return all Posts (with photos) for one Profile.'''
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        '''Return posts for the profile in the URL.'''
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return profile.get_all_posts()
+
+
+class ProfileFeedAPIView(generics.ListAPIView):
+    '''API view to return the feed for one Profile.'''
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        '''Return posts from the profiles this profile follows.'''
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return profile.get_post_feed()
+
+
+class FollowersAPIView(generics.ListAPIView):
+    '''API view to return the profiles that follow one Profile.'''
+    serializer_class = ProfileSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        '''Return the followers of the profile in the URL.'''
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return profile.get_followers()
+
+
+class FollowingAPIView(generics.ListAPIView):
+    '''API view to return the profiles one Profile follows.'''
+    serializer_class = ProfileSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        '''Return the profiles followed by the profile in the URL.'''
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return profile.get_following()
+
+
+class FollowAPIView(APIView):
+    '''POST to follow, DELETE to unfollow, the Profile in the URL as ?viewer=.'''
+
+    def post(self, request, pk):
+        '''The viewer follows this profile (not themselves).'''
+        profile = get_object_or_404(Profile, pk=pk)
+        viewer = get_viewer_profile(request)
+        if viewer == profile:
+            return Response({'detail': "You can't follow yourself."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        Follow.objects.get_or_create(profile=profile, follower_profile=viewer)
+        return Response(ProfileSerializer(profile, context={'request': request}).data)
+
+    def delete(self, request, pk):
+        '''The viewer unfollows this profile.'''
+        profile = get_object_or_404(Profile, pk=pk)
+        viewer = get_viewer_profile(request)
+        Follow.objects.filter(profile=profile, follower_profile=viewer).delete()
+        return Response(ProfileSerializer(profile, context={'request': request}).data)
+
+
+class PostListCreateAPIView(generics.ListCreateAPIView):
+    '''
+    API view to list all Posts (GET) and create a Post (POST).
+    Optional ?search=<text> matches the caption.
+    '''
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        '''Return all posts, filtered by ?search= if given.'''
+        posts = Post.objects.all().order_by('-timestamp')
+        query = self.request.query_params.get('search')
+        if query:
+            posts = posts.filter(caption__icontains=query)
+        return posts
+
+
+class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    '''API view to return (GET), edit the caption (PATCH), or delete (DELETE) one Post.'''
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+
+class LikeAPIView(APIView):
+    '''POST to like, DELETE to unlike, the Post in the URL as ?viewer=.'''
+
+    def post(self, request, pk):
+        '''The viewer likes this post (not their own, same as the web version).'''
+        post = get_object_or_404(Post, pk=pk)
+        viewer = get_viewer_profile(request)
+        if post.profile == viewer:
+            return Response({'detail': "You can't like your own post."},
+                            status=status.HTTP_400_BAD_REQUEST)
+        Like.objects.get_or_create(post=post, profile=viewer)
+        return Response(PostSerializer(post, context={'request': request}).data)
+
+    def delete(self, request, pk):
+        '''The viewer unlikes this post.'''
+        post = get_object_or_404(Post, pk=pk)
+        viewer = get_viewer_profile(request)
+        Like.objects.filter(post=post, profile=viewer).delete()
+        return Response(PostSerializer(post, context={'request': request}).data)
+
+
+class CommentListCreateAPIView(generics.ListCreateAPIView):
+    '''API view to list (GET) or add (POST) Comments on the Post in the URL.'''
+    serializer_class = CommentSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        '''Return the comments on this post, oldest first.'''
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        return Comment.objects.filter(post=post).order_by('timestamp')
+
+    def perform_create(self, serializer):
+        '''Attach the new comment to the post in the URL.'''
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        serializer.save(post=post)
+
+class UserRegistrationView(generics.CreateAPIView):
+    ''' Register a User'''
+    serializer_class = UserSerializer
+
+class UserLoginView(APIView):
+    '''User Login view sign in process'''
+    def post(self, request):
+        '''Validate user View'''
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)  # Authenticate the user
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)  # Create or retrieve a token for the user
+            profile = Profile.objects.filter(user=user).first()
+            return Response({
+                            'token': token.key,
+                            'user_id': user.id,
+                            'username': user.username,
+                            'profile_id': profile.id if profile else None,
+                        }, status=status.HTTP_200_OK)
+        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
